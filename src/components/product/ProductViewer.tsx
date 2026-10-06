@@ -1,12 +1,11 @@
 import { Suspense, useState, useCallback, Component, type ReactNode } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Center, Html } from '@react-three/drei'
+import { Center } from '@react-three/drei'
 import { Maximize2, Minimize2, RotateCcw, Loader2, AlertTriangle } from 'lucide-react'
 import { FurnitureModel } from '@/three/FurnitureModel'
 import { SceneEnvironment } from '@/three/Lighting'
 import { ProductCameraController } from '@/three/CameraController'
-import type { ColorId, Dimensions, HandleId, MaterialId } from '@/types/product'
-import type { Product } from '@/types/product'
+import type { ColorId, Dimensions, HandleId, MaterialId, Product } from '@/types/product'
 
 interface ProductViewerProps {
   product: Product
@@ -31,14 +30,40 @@ class ViewerErrorBoundary extends Component<{ children: ReactNode; onError: () =
   }
 }
 
-function LoadingIndicator() {
+function SceneContent({
+  product,
+  materialId,
+  colorId,
+  handleId,
+  dimensions,
+  resetKey,
+}: {
+  product: Product
+  materialId: MaterialId
+  colorId: ColorId
+  handleId?: HandleId
+  dimensions: Dimensions
+  resetKey: number
+}) {
+  const type = product.category === 'wardrobes' ? 'wardrobe' : product.category
   return (
-    <Html center>
-      <div className="flex flex-col items-center gap-2 text-stone-600">
-        <Loader2 className="animate-spin" size={24} />
-        <span className="text-xs tracking-wide">Loading 3D…</span>
-      </div>
-    </Html>
+    <>
+      <SceneEnvironment preset="apartment" />
+      <ProductCameraController resetKey={resetKey} />
+      <Center position={[0, 0, 0]}>
+        <FurnitureModel
+          type={type}
+          dimensions={dimensions}
+          materialId={materialId}
+          colorId={colorId}
+          handleId={handleId}
+        />
+      </Center>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
+        <circleGeometry args={[2.5, 48]} />
+        <meshStandardMaterial color="#e5dfd4" roughness={0.9} />
+      </mesh>
+    </>
   )
 }
 
@@ -53,58 +78,55 @@ export function ProductViewer({
   const [resetKey, setResetKey] = useState(0)
   const [fullscreen, setFullscreen] = useState(false)
   const [error, setError] = useState(false)
+  const [ready, setReady] = useState(false)
   const onError = useCallback(() => setError(true), [])
 
-  const type = product.category === 'wardrobes' ? 'wardrobe' : product.category
-
-  const canvas = (
+  return (
     <div className={`relative bg-gradient-to-b from-stone-100 to-stone-200 ${fullscreen ? 'fixed inset-0 z-50' : 'w-full h-full min-h-[320px]'} ${className}`}>
       {error ? (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-stone-600 p-6 text-center">
           <AlertTriangle size={28} className="text-walnut" />
           <p className="font-medium text-ink">Unable to load 3D model</p>
           <p className="text-sm max-w-xs">The interactive preview failed. You can still configure options and add to cart.</p>
-          <button
-            type="button"
-            className="text-sm underline"
-            onClick={() => setError(false)}
-          >
+          <button type="button" className="text-sm underline" onClick={() => { setError(false); setReady(false) }}>
             Try again
           </button>
         </div>
       ) : (
-        <ViewerErrorBoundary onError={onError} key={error ? 'err' : 'ok'}>
-          <Canvas
-            shadows
-            dpr={[1, 1.75]}
-            gl={{ antialias: true, toneMappingExposure: 1.05 }}
-            camera={{ position: [1.8, 1.4, 2.2], fov: 40, near: 0.1, far: 50 }}
-            onCreated={({ gl }) => {
-              gl.setClearColor('#ebe6dc')
-            }}
-          >
-            <Suspense fallback={<LoadingIndicator />}>
-              <SceneEnvironment preset="apartment" />
-              <ProductCameraController resetKey={resetKey} />
-              <Center position={[0, 0, 0]}>
-                <FurnitureModel
-                  type={type}
-                  dimensions={dimensions}
+        <>
+          {!ready && (
+            <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center gap-2 text-stone-600 bg-stone-100/80">
+              <Loader2 className="animate-spin" size={24} />
+              <span className="text-xs tracking-wide">Loading 3D…</span>
+            </div>
+          )}
+          <ViewerErrorBoundary onError={onError} key={error ? 'err' : 'ok'}>
+            <Canvas
+              shadows
+              dpr={[1, 1.75]}
+              gl={{ antialias: true, toneMappingExposure: 1.05 }}
+              camera={{ position: [1.8, 1.4, 2.2], fov: 40, near: 0.1, far: 50 }}
+              onCreated={({ gl }) => {
+                gl.setClearColor('#ebe6dc')
+                setReady(true)
+              }}
+            >
+              <Suspense fallback={null}>
+                <SceneContent
+                  product={product}
                   materialId={materialId}
                   colorId={colorId}
                   handleId={handleId}
+                  dimensions={dimensions}
+                  resetKey={resetKey}
                 />
-              </Center>
-              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
-                <circleGeometry args={[2.5, 48]} />
-                <meshStandardMaterial color="#e5dfd4" roughness={0.9} />
-              </mesh>
-            </Suspense>
-          </Canvas>
-        </ViewerErrorBoundary>
+              </Suspense>
+            </Canvas>
+          </ViewerErrorBoundary>
+        </>
       )}
 
-      <div className="absolute bottom-3 right-3 flex gap-2">
+      <div className="absolute bottom-3 right-3 flex gap-2 z-[2]">
         <button
           type="button"
           onClick={() => setResetKey((k) => k + 1)}
@@ -124,11 +146,9 @@ export function ProductViewer({
           {fullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
         </button>
       </div>
-      <p className="absolute bottom-3 left-3 text-[10px] uppercase tracking-wider text-stone-500 bg-cream/80 px-2 py-1 rounded-sm">
+      <p className="absolute bottom-3 left-3 z-[2] text-[10px] uppercase tracking-wider text-stone-500 bg-cream/80 px-2 py-1 rounded-sm">
         Drag to orbit · Scroll to zoom
       </p>
     </div>
   )
-
-  return canvas
 }

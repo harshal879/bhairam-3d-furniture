@@ -51,15 +51,17 @@ export function Home() {
             Explore furniture, configure your pieces and create your room.
           </p>
           <div className="mt-8 flex flex-wrap gap-3 animate-fade-up-delay-3">
-            <Link to="/shop">
-              <Button size="lg" className="bg-cream text-ink hover:bg-white">
-                Explore Furniture
-              </Button>
+            <Link
+              to="/shop"
+              className="inline-flex items-center justify-center h-12 px-7 rounded-sm text-base font-medium tracking-wide bg-cream text-ink hover:bg-white transition-colors"
+            >
+              Explore Furniture
             </Link>
-            <Link to="/configurator">
-              <Button size="lg" variant="outline" className="border-cream/60 text-cream hover:bg-cream/10 hover:border-cream">
-                Try 3D Room Planner
-              </Button>
+            <Link
+              to="/configurator"
+              className="inline-flex items-center justify-center h-12 px-7 rounded-sm text-base font-medium tracking-wide border border-cream/70 text-cream hover:bg-cream/10 transition-colors"
+            >
+              Try 3D Room Planner
             </Link>
           </div>
         </div>

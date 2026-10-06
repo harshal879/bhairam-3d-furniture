@@ -1,6 +1,5 @@
-import { Suspense, useRef, useCallback } from 'react'
+import { Suspense, useRef, useCallback, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Html } from '@react-three/drei'
 import * as THREE from 'three'
 import { Loader2 } from 'lucide-react'
 import { FurnitureModel } from '@/three/FurnitureModel'
@@ -88,24 +87,24 @@ function RoomContents() {
 }
 
 export function RoomCanvas({ className = '' }: { className?: string }) {
+  const [ready, setReady] = useState(false)
+
   return (
     <div className={`relative w-full h-full bg-stone-200 ${className}`}>
+      {!ready && (
+        <div className="absolute inset-0 z-[1] flex items-center justify-center gap-2 text-stone-600 text-sm bg-stone-200/80">
+          <Loader2 className="animate-spin" size={18} /> Loading room…
+        </div>
+      )}
       <Canvas
         shadows
         dpr={[1, 1.5]}
         gl={{ antialias: true }}
         camera={{ position: [3.2, 2.4, 3.5], fov: 45, near: 0.1, far: 60 }}
         onPointerMissed={() => useRoomStore.getState().selectItem(null)}
+        onCreated={() => setReady(true)}
       >
-        <Suspense
-          fallback={
-            <Html center>
-              <div className="flex items-center gap-2 text-stone-600 text-sm">
-                <Loader2 className="animate-spin" size={18} /> Loading room…
-              </div>
-            </Html>
-          }
-        >
+        <Suspense fallback={null}>
           <RoomContents />
         </Suspense>
       </Canvas>

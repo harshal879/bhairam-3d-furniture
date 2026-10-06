@@ -204,7 +204,7 @@ export function ConfiguratorPanel() {
         </Button>
         <Link
           to={`/configurator?product=${product.id}`}
-          className="inline-flex items-center justify-center gap-2 h-13 px-7 text-base rounded-sm font-medium tracking-wide border border-stone-300 text-ink hover:border-ink hover:bg-stone-50 transition-colors"
+          className="inline-flex items-center justify-center gap-2 h-12 px-7 text-base rounded-sm font-medium tracking-wide border border-stone-300 text-ink hover:border-ink hover:bg-stone-50 transition-colors"
         >
           <Box size={16} /> Try in 3D room
         </Link>
