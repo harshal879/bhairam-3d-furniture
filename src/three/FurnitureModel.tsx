@@ -63,7 +63,13 @@ export function FurnitureModel({
   )
 
   const doorInset = useMemo(
-    () => new THREE.MeshStandardMaterial({ color: '#00000022', roughness: 1 }),
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: '#1a1816',
+        transparent: true,
+        opacity: 0.12,
+        roughness: 1,
+      }),
     [],
   )
 

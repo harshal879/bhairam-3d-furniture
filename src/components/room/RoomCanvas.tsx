@@ -1,7 +1,7 @@
-import { Suspense, useRef, useCallback, useState } from 'react'
+import { Suspense, useRef, useCallback, useState, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import * as THREE from 'three'
-import { Loader2 } from 'lucide-react'
+import { Loader2, AlertTriangle } from 'lucide-react'
 import { FurnitureModel } from '@/three/FurnitureModel'
 import { RoomShell } from '@/three/RoomScene'
 import { RoomLighting } from '@/three/Lighting'
@@ -88,6 +88,28 @@ function RoomContents() {
 
 export function RoomCanvas({ className = '' }: { className?: string }) {
   const [ready, setReady] = useState(false)
+  const [failed, setFailed] = useState(false)
+
+  useEffect(() => {
+    if (ready || failed) return
+    const t = window.setTimeout(() => {
+      if (!ready) setFailed(true)
+    }, 10000)
+    return () => window.clearTimeout(t)
+  }, [ready, failed])
+
+  if (failed) {
+    return (
+      <div className={`relative w-full h-full bg-stone-100 flex flex-col items-center justify-center gap-3 p-6 text-center ${className}`}>
+        <AlertTriangle size={28} className="text-walnut" />
+        <p className="font-medium text-ink">Room preview could not start</p>
+        <p className="text-sm text-stone-500 max-w-sm">WebGL may be unavailable in this browser. Side panels still work for adding furniture.</p>
+        <button type="button" className="text-sm underline" onClick={() => { setFailed(false); setReady(false) }}>
+          Try again
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div className={`relative w-full h-full bg-stone-200 ${className}`}>
@@ -99,7 +121,7 @@ export function RoomCanvas({ className = '' }: { className?: string }) {
       <Canvas
         shadows
         dpr={[1, 1.5]}
-        gl={{ antialias: true }}
+        gl={{ antialias: true, powerPreference: 'default', failIfMajorPerformanceCaveat: false }}
         camera={{ position: [3.2, 2.4, 3.5], fov: 45, near: 0.1, far: 60 }}
         onPointerMissed={() => useRoomStore.getState().selectItem(null)}
         onCreated={() => setReady(true)}
