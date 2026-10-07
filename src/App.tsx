@@ -8,6 +8,7 @@ import { Configurator } from '@/pages/Configurator'
 import { Cart } from '@/pages/Cart'
 import { Enquiry } from '@/pages/Enquiry'
 import { Rooms, Inspiration } from '@/pages/Rooms'
+import { ViewInRoom } from '@/pages/ViewInRoom'
 
 class AppErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   state: { error: Error | null } = { error: null }
@@ -44,6 +45,8 @@ export default function App() {
     <AppErrorBoundary>
       <BrowserRouter>
         <Routes>
+          {/* Full-screen camera overlay — outside site chrome */}
+          <Route path="view-in-room/:productId" element={<ViewInRoom />} />
           <Route element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="shop" element={<Shop />} />

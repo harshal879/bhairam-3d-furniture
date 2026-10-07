@@ -6,7 +6,7 @@ import { calculatePrice, formatINR } from '@/utils/pricing'
 import { clampDimension, formatDimensions } from '@/utils/dimensions'
 import { Button } from '@/components/ui/Button'
 import { Link } from 'react-router-dom'
-import { Minus, Plus, ShoppingBag, Box } from 'lucide-react'
+import { Minus, Plus, ShoppingBag, Box, Camera } from 'lucide-react'
 import type { ColorId, HandleId, MaterialId } from '@/types/product'
 
 export function ConfiguratorPanel() {
@@ -208,6 +208,14 @@ export function ConfiguratorPanel() {
         >
           <Box size={16} /> Try in 3D room
         </Link>
+        {product.is3DEnabled && (
+          <Link
+            to={`/view-in-room/${product.id}`}
+            className="inline-flex items-center justify-center gap-2 h-12 px-7 text-base rounded-sm font-medium tracking-wide border border-stone-300 text-ink hover:border-ink hover:bg-stone-50 transition-colors"
+          >
+            <Camera size={16} /> View in Your Room
+          </Link>
+        )}
         <Link
           to={`/enquiry?product=${product.id}`}
           className="inline-flex items-center justify-center gap-2 h-11 px-5 text-sm rounded-sm font-medium text-ink hover:bg-stone-100 transition-colors"
