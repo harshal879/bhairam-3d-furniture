@@ -14,5 +14,14 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 45321,
     strictPort: true,
+    // Allow phone access via HTTPS tunnels (cloudflared / ngrok / localtunnel)
+    allowedHosts: true,
+  },
+  preview: {
+    host: '0.0.0.0',
+    port: 45322,
+    strictPort: true,
+    allowedHosts: true,
   },
 })
+
