@@ -1,7 +1,7 @@
 import type { Product } from '@/types/product'
 
 /**
- * Sample catalogue — fictional demo products for FORMA LIVING.
+ * Sample catalogue — fictional demo products for the Bhairam configurator.
  * Dimensions are in millimetres (mm).
  * modelPath: null means procedural Three.js geometry is used.
  */
@@ -12,7 +12,7 @@ export const products: Product[] = [
     category: 'wardrobes',
     description: 'A modular wardrobe with adjustable width, soft-close doors and interchangeable handles.',
     longDescription:
-      'The Aalto Wardrobe is the centrepiece of the FORMA configurable range. Designed for modern Indian apartments, it combines panel construction with flexible dimensions so you can fit the piece to your alcove. Soft-close hinges, adjustable shelves and three handle styles come standard. Configure width, height, depth, material and finish in real time — then try it in the 3D room planner.',
+      'The Aalto Wardrobe is the centrepiece of the demo configurable range. Designed for modern apartments, it combines panel construction with flexible dimensions so you can fit the piece to your alcove. Soft-close hinges, adjustable shelves and three handle styles come standard. Configure width, height, depth, material and finish in real time — then try it in the 3D room planner.',
     price: 24999,
     dimensions: { width: 1800, height: 2100, depth: 600 },
     materials: ['walnut', 'oak', 'white', 'dark-wood'],

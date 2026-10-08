@@ -4,7 +4,7 @@ export const categories: CategoryInfo[] = [
   {
     id: 'all',
     name: 'All Furniture',
-    description: 'Browse the full FORMA collection',
+    description: 'Browse the demo furniture collection',
     image: '/images/categories/all.svg',
   },
   {

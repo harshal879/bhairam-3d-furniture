@@ -52,7 +52,7 @@ export function Inspiration() {
         <p className="text-[11px] uppercase tracking-[0.2em] text-stone-500 mb-2">Inspiration</p>
         <h1 className="font-display text-3xl sm:text-4xl text-ink">Spaces worth lingering in</h1>
         <p className="mt-3 text-stone-600 leading-relaxed">
-          Mood boards from the FORMA collection — tap through to shop or plan in 3D.
+          Mood boards from the demo collection — tap through to shop or plan in 3D.
         </p>
       </div>
       <div className="grid sm:grid-cols-2 gap-6 lg:gap-8">

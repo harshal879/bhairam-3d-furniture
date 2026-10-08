@@ -1,4 +1,4 @@
-# Asset sources — FORMA LIVING
+# Asset sources — Bhairam
 
 This prototype avoids third-party 3D models and textures with unclear licenses.
 
